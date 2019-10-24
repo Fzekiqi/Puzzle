@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -43,7 +44,7 @@ public class Puzzle extends JFrame {
     }
 
     public void shuffleButtons() {
-        Collections.shuffle(Arrays.asList(buttons));
+//        Collections.shuffle(Arrays.asList(buttons));
         for (int i = 0; i < buttons.length; i++) {
             panel.add(buttons[i]);
         }
@@ -81,16 +82,20 @@ public class Puzzle extends JFrame {
     };
 
     public void isGameOver() {
-
-        if(Arrays.equals(finishedGame, buttons)){
-            System.out.println("Game finished");
-        } else {
-            System.out.println("False");
+        for(int i = 0; i < buttons.length;i++){
+            if(buttons[i].getText().equals(finishedGame[i].getText())){
+                System.out.println("True");
+            }
         }
+
+//        if(Arrays.equals(finishedGame, buttons)){
+//            System.out.println("Game finished");
+//        } else {
+//            System.out.println("False");
+//        }
     }
 
     public static void main(String[] args) {
         new Puzzle();
     }
-
 }
