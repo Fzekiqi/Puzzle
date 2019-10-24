@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Collections;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,6 +15,7 @@ public class Puzzle extends JFrame {
 
     Puzzle() {
         iniButtons();
+
         panel.setLayout(new GridLayout(4, 4));
 
         add(panel);
@@ -31,6 +34,7 @@ public class Puzzle extends JFrame {
             panel.add(buttons[i]);
             buttons[i].addActionListener(l);
         }
+
     }
 
     ActionListener l = e -> {
