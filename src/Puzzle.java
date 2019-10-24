@@ -38,7 +38,6 @@ public class Puzzle extends JFrame {
         for (int i = 0; i < buttons.length; i++) {
             if (e.getSource() == buttons[i]) {
 
-
                 if (
                         ((
                                 unvis.getY() == buttons[i].getY()) &&
