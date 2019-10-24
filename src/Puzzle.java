@@ -10,11 +10,17 @@ public class Puzzle extends JFrame {
 
 
     JButton[] buttons = new JButton[15];
+    JButton[] finishedGame = new JButton[15];
     JPanel panel = new JPanel();
     JButton invisibleButton = new JButton();
 
     Puzzle() {
-        iniButtons();
+        initJFrame();
+    }
+
+    public void initJFrame() {
+        initButtons(buttons);
+        initButtons(finishedGame);
         invisibleButton.setVisible(false);
         panel.setLayout(new GridLayout(4, 4));
         add(panel);
@@ -25,13 +31,22 @@ public class Puzzle extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
-    public void iniButtons() {
-        for (int i = 0; i < buttons.length; i++) {
-            buttons[i] = new JButton("" + (i + 1));
-            panel.add(buttons[i]);
-            buttons[i].addActionListener(l);
-        }
 
+    public void initButtons(JButton[] jButtons) {
+
+
+        for (int i = 0; i < jButtons.length; i++) {
+            jButtons[i] = new JButton("" + (i + 1));
+            jButtons[i].addActionListener(l);
+        }
+        shuffleButtons();
+    }
+
+    public void shuffleButtons() {
+        Collections.shuffle(Arrays.asList(buttons));
+        for (int i = 0; i < buttons.length; i++) {
+            panel.add(buttons[i]);
+        }
     }
 
     ActionListener l = e -> {
@@ -62,7 +77,17 @@ public class Puzzle extends JFrame {
                 }
             }
         }
+        isGameOver();
     };
+
+    public void isGameOver() {
+
+        if(Arrays.equals(finishedGame, buttons)){
+            System.out.println("Game finished");
+        } else {
+            System.out.println("False");
+        }
+    }
 
     public static void main(String[] args) {
         new Puzzle();
