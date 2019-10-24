@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import javax.swing.JButton;
@@ -34,7 +35,6 @@ public class Puzzle extends JFrame {
 
     public void initButtons(JButton[] jButtons) {
 
-
         for (int i = 0; i < jButtons.length; i++) {
             jButtons[i] = new JButton("" + (i + 1));
             jButtons[i].addActionListener(l);
@@ -56,37 +56,35 @@ public class Puzzle extends JFrame {
                 JButton button = buttons[i];
 
                 if (
-                        ((
-                                invisibleButton.getY() == button.getY()) &&
-                                button.getX() == invisibleButton.getX() - invisibleButton.getWidth() |
-                                        button.getX() == invisibleButton.getX() + invisibleButton.getWidth())
+                    ((
+                        invisibleButton.getY() == button.getY()) &&
+                        button.getX() == invisibleButton.getX() - invisibleButton.getWidth() |
+                            button.getX() == invisibleButton.getX() + invisibleButton.getWidth())
                 ) {
+
                     Point temp = new Point(button.getLocation());
                     button.setLocation(invisibleButton.getLocation());
                     invisibleButton.setLocation(temp);
 
                 } else if (
-                        invisibleButton.getX() == button.getX() &&
-                                invisibleButton.getY() + invisibleButton.getHeight() == button.getY() |
-                                        invisibleButton.getY() - invisibleButton.getHeight() == button.getY()) {
-
+                    invisibleButton.getX() == button.getX() &&
+                        invisibleButton.getY() + invisibleButton.getHeight() == button.getY() |
+                            invisibleButton.getY() - invisibleButton.getHeight() == button.getY()) {
 
                     Point temp = new Point(button.getLocation());
                     button.setLocation(invisibleButton.getLocation());
                     invisibleButton.setLocation(temp);
                 }
+
             }
         }
+
         isGameOver();
     };
 
     public void isGameOver() {
 
-        if(Arrays.equals(finishedGame, buttons)){
-            System.out.println("Game finished");
-        } else {
-            System.out.println("False");
-        }
+
     }
 
     public static void main(String[] args) {
