@@ -1,9 +1,4 @@
-package testing;
-
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,12 +11,9 @@ public class Puzzle extends JFrame {
     JPanel panel = new JPanel();
     JButton unvis = new JButton();
 
-
-    GridLayout grid = new GridLayout(4, 4);
-
     Puzzle() {
         iniButtons();
-        panel.setLayout(grid);
+        panel.setLayout(new GridLayout(4, 4));
 
         add(panel);
 
@@ -39,7 +31,6 @@ public class Puzzle extends JFrame {
             panel.add(buttons[i]);
             buttons[i].addActionListener(l);
         }
-
     }
 
     ActionListener l = e -> {
@@ -49,68 +40,25 @@ public class Puzzle extends JFrame {
 
 
                 if (
-                    ((
-                        unvis.getY() == buttons[i].getY()) &&
-                        buttons[i].getX() == unvis.getX() - unvis.getWidth()) |
-                        buttons[i].getX() == unvis.getX() + unvis.getWidth()
-
-
+                        ((
+                                unvis.getY() == buttons[i].getY()) &&
+                                buttons[i].getX() == unvis.getX() - unvis.getWidth() |
+                                        buttons[i].getX() == unvis.getX() + unvis.getWidth())
                 ) {
-
-                    System.out.println("IF");
-
-
                     Point temp = new Point(buttons[i].getLocation());
                     buttons[i].setLocation(unvis.getLocation());
                     unvis.setLocation(temp);
 
-
                 } else if (
-                    unvis.getX() == buttons[i].getX() &&
-                        unvis.getY() + unvis.getHeight() == buttons[i].getY() |
-                            unvis.getY() - unvis.getHeight() == buttons[i].getY()) {
+                        unvis.getX() == buttons[i].getX() &&
+                                unvis.getY() + unvis.getHeight() == buttons[i].getY() |
+                                        unvis.getY() - unvis.getHeight() == buttons[i].getY()) {
 
-
-                    System.out.println("ELSE IF");
 
                     Point temp = new Point(buttons[i].getLocation());
                     buttons[i].setLocation(unvis.getLocation());
                     unvis.setLocation(temp);
                 }
-
-
-//                if (
-//
-//
-//                        ((buttons[i].getX() == unvis.getX() - unvis.getWidth()) ||
-//                                buttons[i].getX() == unvis.getX() + unvis.getWidth()
-//                                        &&
-//                                        (unvis.getY() == buttons[i].getY()) )
-//
-//                        ||
-//                                unvis.getY() + unvis.getHeight() == buttons[i].getY() ||
-//                                unvis.getY() - unvis.getHeight() == buttons[i].getY()
-//
-//                                && unvis.getX() == buttons[i].getX()
-//                ) {
-//
-//                    System.out.println("UnvisX : " + unvis.getX());
-//                    System.out.println("UnvisY : " + unvis.getY());
-//                    System.out.println("ButtonX : " + buttons[i].getX());
-//                    System.out.println("ButtonY : " + buttons[i].getY());
-//                    System.out.println("===");
-//
-//                    Point temp = new Point(buttons[i].getLocation());
-//                    buttons[i].setLocation(unvis.getLocation());
-//                    unvis.setLocation(temp);
-//
-//                    System.out.println("UnvisX : " + unvis.getX());
-//                    System.out.println("UnvisY : " + unvis.getY());
-//                    System.out.println("ButtonX : " + buttons[i].getX());
-//                    System.out.println("ButtonY : " + buttons[i].getY());
-//                    System.out.println("____");
-//                }
-
             }
         }
     };
@@ -120,4 +68,3 @@ public class Puzzle extends JFrame {
     }
 
 }
-
