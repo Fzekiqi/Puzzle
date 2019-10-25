@@ -7,25 +7,27 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.util.Iterator;
-import java.util.stream.Stream;
-
 
 public class Puzzle extends JFrame {
 
-    ArrayList<JButton> buttons = new ArrayList<>();
-    JPanel panel = new JPanel();
-    JButton invisibleButton = new JButton();
-    JButton newGame = new JButton("New Game");
+    private ArrayList<JButton> buttons = new ArrayList<>();
+    private ArrayList<String> finishedGame = new ArrayList<>();
+    private JPanel panel = new JPanel();
+    private JButton invisibleButton = new JButton();
+    private JButton newGame = new JButton("New Game");
+    private int columns;
+    private int rows;
 
     Puzzle() {
+        getUserInput();
         initJFrame();
     }
 
     public void initJFrame() {
         initButtons();
-        invisibleButton.setText("16");
+        invisibleButton.setText(String.valueOf(buttons.size()));
         invisibleButton.setVisible(false);
-        panel.setLayout(new GridLayout(4, 4));
+        panel.setLayout(new GridLayout(rows, columns));
 
         newGame.addActionListener(startNewGame);
         add(newGame, BorderLayout.NORTH);
@@ -36,13 +38,22 @@ public class Puzzle extends JFrame {
         setSize(400, 400);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        createList();
     }
 
+    public void getUserInput() {
+        try {
+            columns = Integer.parseInt(JOptionPane.showInputDialog(null, "Hur många kolumner vill du ha?"));
+            rows = Integer.parseInt(JOptionPane.showInputDialog(null, "Hur många rader vill du ha?"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            //FIXME wfakwa
+        }
+    }
 
     public void initButtons() {
-
-        for (int i = 0; i < 15; i++) {
-            buttons.add(new JButton("" + (i + 1)));
+        for (int i = 0; i < columns * rows - 1; i++) {
+            buttons.add(new JButton(String.valueOf(i + 1)));
             buttons.get(i).addActionListener(l);
         }
         shuffleButtons();
@@ -57,7 +68,6 @@ public class Puzzle extends JFrame {
     }
 
     ActionListener l = e -> {
-
         for (int i = 0; i < buttons.size(); i++) {
             if (e.getSource() == buttons.get(i)) {
                 JButton button = buttons.get(i);
@@ -96,10 +106,9 @@ public class Puzzle extends JFrame {
     }
 
     public void isGameOver() {
-        if (
-                Stream.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16")
-                        .allMatch((buttonNumber) -> buttonNumber.equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()))
-        ) {
+        boolean isGameFinished = finishedGame.stream()
+                .allMatch((buttonNumber) -> buttonNumber.equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()));
+        if (isGameFinished) {
             JOptionPane.showMessageDialog(null, "Du har vunnit!");
         }
     }
@@ -118,8 +127,13 @@ public class Puzzle extends JFrame {
         invisibleButton.setVisible(false);
     };
 
+    public void createList() {
+        for (int i = 1; i <= buttons.size(); i++) {
+            finishedGame.add(String.valueOf(i));
+        }
+    }
+
     public static void main(String[] args) {
         new Puzzle();
     }
-
 }
