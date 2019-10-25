@@ -10,7 +10,6 @@ public class Puzzle extends JFrame {
 
     //    JButton[] buttons = new JButton[15];
     ArrayList<JButton> buttons = new ArrayList<>();
-    ArrayList<JButton> finishedGame = new ArrayList<>();
     JPanel panel = new JPanel();
     JButton invisibleButton = new JButton();
 
@@ -19,8 +18,7 @@ public class Puzzle extends JFrame {
     }
 
     public void initJFrame() {
-        initButtons(buttons);
-        initButtons(finishedGame);
+        initButtons();
         invisibleButton.setText("16");
         invisibleButton.setVisible(false);
         panel.setLayout(new GridLayout(4, 4));
@@ -31,15 +29,14 @@ public class Puzzle extends JFrame {
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         buttons.add(invisibleButton);
-        finishedGame.add(invisibleButton);
     }
 
 
-    public void initButtons(ArrayList<JButton> jbuttons) {
+    public void initButtons() {
 
         for (int i = 0; i < 15; i++) {
-            jbuttons.add(new JButton("" + (i + 1)));
-            jbuttons.get(i).addActionListener(l);
+            buttons.add(new JButton("" + (i + 1)));
+            buttons.get(i).addActionListener(l);
         }
         shuffleButtons();
     }
@@ -52,14 +49,6 @@ public class Puzzle extends JFrame {
     }
 
     ActionListener l = e -> {
-
-
-        System.out.println("Before Changing");
-
-        for (JButton button1 : buttons) {
-            System.out.print(button1.getText() + " ");
-        }
-        System.out.println();
 
         for (int i = 0; i < buttons.size(); i++) {
             if (e.getSource() == buttons.get(i)) {
@@ -81,35 +70,19 @@ public class Puzzle extends JFrame {
                     button.setLocation(invisibleButton.getLocation());
                     invisibleButton.setLocation(temp);
 
-
-                    System.out.println("Change Place in list");
-
                     int indexOfButton = buttons.indexOf(button);
                     int indexOfInvisibleButton = buttons.indexOf(invisibleButton);
 
                     buttons.set(indexOfButton, invisibleButton);
                     buttons.set(indexOfInvisibleButton, button);
 
-//                    Stream<JButton> jButtonStream = Stream.of().flatMap(buttons);
-//                    Stream<ArrayList<JButton>> jb = Stream.of(finishedGame);
-
-                    List<Integer> hda = new ArrayList<>();
-
-
                     if (
                             Stream.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16")
-                            .allMatch((abc) -> abc.equals(buttons.get(Integer.parseInt(abc) - 1).getText()))
+                                    .allMatch((abc) -> abc.equals(buttons.get(Integer.parseInt(abc) - 1).getText()))
                     ) {
                         System.exit(0);
                     }
-
-
-                    for (JButton button1 : buttons) {
-                        System.out.print(button1.getText() + " ");
-                    }
-                    System.out.println();
                 }
-
                 break;
             }
         }
