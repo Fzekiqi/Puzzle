@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -6,13 +7,15 @@ import java.util.Collections;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import java.util.List;
+import java.util.stream.Stream;
+
 
 public class Puzzle extends JFrame {
 
 
     //    JButton[] buttons = new JButton[15];
     ArrayList<JButton> buttons = new ArrayList<>();
-    ArrayList<JButton> finishedGame = new ArrayList<>();
     JPanel panel = new JPanel();
     JButton invisibleButton = new JButton();
 
@@ -21,8 +24,8 @@ public class Puzzle extends JFrame {
     }
 
     public void initJFrame() {
-        initButtons(buttons);
-        initButtons(finishedGame);
+        initButtons();
+        invisibleButton.setText("16");
         invisibleButton.setVisible(false);
         panel.setLayout(new GridLayout(4, 4));
         add(panel);
@@ -35,11 +38,12 @@ public class Puzzle extends JFrame {
     }
 
 
-    public void initButtons(ArrayList<JButton> jbuttons) {
+    public void initButtons() {
 
         for (int i = 0; i < 15; i++) {
-            jbuttons.add(new JButton("" + (i + 1)));
-            jbuttons.get(i).addActionListener(l);
+
+            buttons.add(new JButton("" + (i + 1)));
+            buttons.get(i).addActionListener(l);
 
         }
         shuffleButtons();
@@ -60,42 +64,41 @@ public class Puzzle extends JFrame {
                 JButton button = buttons.get(i);
 
                 if (
-                    ((
-                        invisibleButton.getY() == button.getY()) &&
-                        button.getX() == invisibleButton.getX() - invisibleButton.getWidth() |
-                            button.getX() == invisibleButton.getX() + invisibleButton.getWidth())
+
+                        ((
+                                (invisibleButton.getY() == button.getY()) &&
+                                        button.getX() == invisibleButton.getX() - invisibleButton.getWidth() |
+                                                button.getX() == invisibleButton.getX() + invisibleButton.getWidth())
+                                ||
+                                (invisibleButton.getX() == button.getX() &&
+                                        invisibleButton.getY() + invisibleButton.getHeight() == button.getY() |
+                                                invisibleButton.getY() - invisibleButton.getHeight() == button.getY())
+                        )
+
                 ) {
 
                     Point temp = new Point(button.getLocation());
                     button.setLocation(invisibleButton.getLocation());
                     invisibleButton.setLocation(temp);
 
+                    int indexOfButton = buttons.indexOf(button);
+                    int indexOfInvisibleButton = buttons.indexOf(invisibleButton);
 
-                } else if (
-                    invisibleButton.getX() == button.getX() &&
-                        invisibleButton.getY() + invisibleButton.getHeight() == button.getY() |
-                            invisibleButton.getY() - invisibleButton.getHeight() == button.getY()) {
 
-                    Point temp = new Point(button.getLocation());
-                    button.setLocation(invisibleButton.getLocation());
-                    invisibleButton.setLocation(temp);
+                    buttons.set(indexOfButton, invisibleButton);
+                    buttons.set(indexOfInvisibleButton, button);
 
+                    if (
+                            Stream.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16")
+                                    .allMatch((abc) -> abc.equals(buttons.get(Integer.parseInt(abc) - 1).getText()))
+                    ) {
+                        System.exit(0);
+                    }
                 }
-            writeOut();
+                break;
             }
-
         }
-
-
     };
-
-    public void writeOut(){
-        for (JButton button : buttons ){
-            System.out.print(button.getText()+" ");;
-        }
-        System.out.println();
-    }
-
 
 
     public static void main(String[] args) {
