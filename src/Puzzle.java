@@ -6,9 +6,7 @@ import java.util.Collections;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import java.util.Iterator;
-import java.util.ListIterator;
 import java.util.stream.Stream;
 
 
@@ -24,17 +22,16 @@ public class Puzzle extends JFrame {
     }
 
     public void initJFrame() {
-        setTitle("15 Puzzle");
         initButtons();
         invisibleButton.setText("16");
         invisibleButton.setVisible(false);
         panel.setLayout(new GridLayout(4, 4));
 
-//        newGame.setVisible(false);
         newGame.addActionListener(startNewGame);
         add(newGame, BorderLayout.NORTH);
         add(panel);
         panel.add(invisibleButton);
+        setTitle("15 Puzzle");
         setLocationRelativeTo(null);
         setSize(400, 400);
         setVisible(true);
@@ -45,16 +42,14 @@ public class Puzzle extends JFrame {
     public void initButtons() {
 
         for (int i = 0; i < 15; i++) {
-
             buttons.add(new JButton("" + (i + 1)));
             buttons.get(i).addActionListener(l);
-
         }
         shuffleButtons();
     }
 
     public void shuffleButtons() {
-          Collections.shuffle(buttons);
+        Collections.shuffle(buttons);
         for (int i = 0; i < buttons.size(); i++) {
             panel.add(buttons.get(i));
         }
@@ -67,20 +62,8 @@ public class Puzzle extends JFrame {
             if (e.getSource() == buttons.get(i)) {
                 JButton button = buttons.get(i);
 
-                if (
-                        ((
-                                (invisibleButton.getY() == button.getY()) &&
-                                        button.getX() == invisibleButton.getX() - invisibleButton.getWidth() |
-                                                button.getX() == invisibleButton.getX() + invisibleButton.getWidth())
-                                ||
-                                (invisibleButton.getX() == button.getX() &&
-                                        invisibleButton.getY() + invisibleButton.getHeight() == button.getY() |
-                                                invisibleButton.getY() - invisibleButton.getHeight() == button.getY())
-                        )
-
-                ) {
-
-                    moveTiles(button);
+                if (isButtonMovable(button)) {
+                    moveButtons(button);
                     isGameOver();
                 }
                 break;
@@ -88,7 +71,19 @@ public class Puzzle extends JFrame {
         }
     };
 
-    public void moveTiles(JButton button) {
+    public boolean isButtonMovable(JButton button) {
+        boolean isToTheRightOrLeft = (invisibleButton.getY() == button.getY()) &&
+                button.getX() == invisibleButton.getX() - invisibleButton.getWidth() |
+                        button.getX() == invisibleButton.getX() + invisibleButton.getWidth();
+
+        boolean isOverOrUnder = (invisibleButton.getX() == button.getX() &&
+                invisibleButton.getY() + invisibleButton.getHeight() == button.getY() |
+                        invisibleButton.getY() - invisibleButton.getHeight() == button.getY());
+
+        return (isToTheRightOrLeft || isOverOrUnder);
+    }
+
+    public void moveButtons(JButton button) {
         Point temp = new Point(button.getLocation());
         button.setLocation(invisibleButton.getLocation());
         invisibleButton.setLocation(temp);
@@ -105,7 +100,6 @@ public class Puzzle extends JFrame {
                 Stream.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16")
                         .allMatch((buttonNumber) -> buttonNumber.equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()))
         ) {
-
             JOptionPane.showMessageDialog(null, "Du har vunnit!");
         }
     }
