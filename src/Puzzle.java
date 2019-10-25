@@ -2,13 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 import java.util.stream.Stream;
 
 public class Puzzle extends JFrame {
 
-
-    //    JButton[] buttons = new JButton[15];
     ArrayList<JButton> buttons = new ArrayList<>();
     JPanel panel = new JPanel();
     JButton invisibleButton = new JButton();
@@ -18,6 +16,7 @@ public class Puzzle extends JFrame {
     }
 
     public void initJFrame() {
+        setTitle("Fifteen Puzzle");
         initButtons();
         invisibleButton.setText("16");
         invisibleButton.setVisible(false);
@@ -65,28 +64,34 @@ public class Puzzle extends JFrame {
                                                 invisibleButton.getY() - invisibleButton.getHeight() == button.getY())
                         )
                 ) {
-
-                    Point temp = new Point(button.getLocation());
-                    button.setLocation(invisibleButton.getLocation());
-                    invisibleButton.setLocation(temp);
-
-                    int indexOfButton = buttons.indexOf(button);
-                    int indexOfInvisibleButton = buttons.indexOf(invisibleButton);
-
-                    buttons.set(indexOfButton, invisibleButton);
-                    buttons.set(indexOfInvisibleButton, button);
-
-                    if (
-                            Stream.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16")
-                                    .allMatch((abc) -> abc.equals(buttons.get(Integer.parseInt(abc) - 1).getText()))
-                    ) {
-                        System.exit(0);
-                    }
+                    moveTiles(button);
+                    isGameOver();
                 }
                 break;
             }
         }
     };
+
+    public void moveTiles(JButton button) {
+        Point temp = new Point(button.getLocation());
+        button.setLocation(invisibleButton.getLocation());
+        invisibleButton.setLocation(temp);
+
+        int indexOfButton = buttons.indexOf(button);
+        int indexOfInvisibleButton = buttons.indexOf(invisibleButton);
+
+        buttons.set(indexOfButton, invisibleButton);
+        buttons.set(indexOfInvisibleButton, button);
+    }
+
+    public void isGameOver() {
+        if (
+                Stream.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16")
+                        .allMatch((buttonNumber) -> buttonNumber.equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()))
+        ) {
+            JOptionPane.showMessageDialog(null, "Du har vunnit Fazli!");
+        }
+    }
 
     public static void main(String[] args) {
         new Puzzle();
