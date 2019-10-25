@@ -39,7 +39,6 @@ public class Puzzle extends JFrame {
         setSize(400, 400);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        buttons.add(invisibleButton);
     }
 
 
@@ -55,7 +54,7 @@ public class Puzzle extends JFrame {
     }
 
     public void shuffleButtons() {
-        //  Collections.shuffle(buttons);
+          Collections.shuffle(buttons);
         for (int i = 0; i < buttons.size(); i++) {
             panel.add(buttons.get(i));
         }
@@ -107,10 +106,9 @@ public class Puzzle extends JFrame {
                         .allMatch((buttonNumber) -> buttonNumber.equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()))
         ) {
 
-            JOptionPane.showMessageDialog(null, "Du har vunnit Fazli!");
+            JOptionPane.showMessageDialog(null, "Du har vunnit!");
         }
     }
-
 
     ActionListener startNewGame = e -> {
         Iterator<JButton> iterator = buttons.iterator();
@@ -120,7 +118,10 @@ public class Puzzle extends JFrame {
             iterator.remove();
             panel.remove(button);
         }
+
         initJFrame();
+        invisibleButton.setVisible(true);
+        invisibleButton.setVisible(false);
     };
 
     public static void main(String[] args) {
