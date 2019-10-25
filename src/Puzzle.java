@@ -1,12 +1,9 @@
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class Puzzle extends JFrame {
 
@@ -24,6 +21,7 @@ public class Puzzle extends JFrame {
     public void initJFrame() {
         initButtons(buttons);
         initButtons(finishedGame);
+        invisibleButton.setText("16");
         invisibleButton.setVisible(false);
         panel.setLayout(new GridLayout(4, 4));
         add(panel);
@@ -58,7 +56,7 @@ public class Puzzle extends JFrame {
 
         System.out.println("Before Changing");
 
-        for(JButton button1 : buttons){
+        for (JButton button1 : buttons) {
             System.out.print(button1.getText() + " ");
         }
         System.out.println();
@@ -70,12 +68,12 @@ public class Puzzle extends JFrame {
                 if (
                         ((
                                 (invisibleButton.getY() == button.getY()) &&
-                                button.getX() == invisibleButton.getX() - invisibleButton.getWidth() |
-                                        button.getX() == invisibleButton.getX() + invisibleButton.getWidth())
+                                        button.getX() == invisibleButton.getX() - invisibleButton.getWidth() |
+                                                button.getX() == invisibleButton.getX() + invisibleButton.getWidth())
                                 ||
                                 (invisibleButton.getX() == button.getX() &&
                                         invisibleButton.getY() + invisibleButton.getHeight() == button.getY() |
-                                                 invisibleButton.getY() - invisibleButton.getHeight() == button.getY())
+                                                invisibleButton.getY() - invisibleButton.getHeight() == button.getY())
                         )
                 ) {
 
@@ -89,18 +87,32 @@ public class Puzzle extends JFrame {
                     int indexOfButton = buttons.indexOf(button);
                     int indexOfInvisibleButton = buttons.indexOf(invisibleButton);
 
-                    buttons.set(indexOfButton,invisibleButton);
+                    buttons.set(indexOfButton, invisibleButton);
                     buttons.set(indexOfInvisibleButton, button);
 
-                    for(JButton button1 : buttons){
+//                    Stream<JButton> jButtonStream = Stream.of().flatMap(buttons);
+//                    Stream<ArrayList<JButton>> jb = Stream.of(finishedGame);
+
+                    List<Integer> hda = new ArrayList<>();
+
+
+                    if (
+                            Stream.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16")
+                            .allMatch((abc) -> abc.equals(buttons.get(Integer.parseInt(abc) - 1).getText()))
+                    ) {
+                        System.exit(0);
+                    }
+
+
+                    for (JButton button1 : buttons) {
                         System.out.print(button1.getText() + " ");
                     }
                     System.out.println();
-                    }
+                }
 
                 break;
-                }
             }
+        }
     };
 
     public static void main(String[] args) {
