@@ -43,8 +43,10 @@ public class Puzzle extends JFrame {
 
     public void getUserInput() {
         try {
-            columns = Integer.parseInt(JOptionPane.showInputDialog(null, "Hur många kolumner vill du ha?"));
-            rows = Integer.parseInt(JOptionPane.showInputDialog(null, "Hur många rader vill du ha?"));
+            columns = Integer
+                .parseInt(JOptionPane.showInputDialog(null, "Hur många kolumner vill du ha?"));
+            rows = Integer
+                .parseInt(JOptionPane.showInputDialog(null, "Hur många rader vill du ha?"));
         } catch (Exception e) {
             e.printStackTrace();
             //FIXME wfakwa
@@ -82,13 +84,18 @@ public class Puzzle extends JFrame {
     };
 
     public boolean isButtonMovable(JButton button) {
-        boolean isToTheRightOrLeft = (invisibleButton.getY() == button.getY()) &&
-                button.getX() == invisibleButton.getX() - invisibleButton.getWidth() |
-                        button.getX() == invisibleButton.getX() + invisibleButton.getWidth();
 
-        boolean isOverOrUnder = (invisibleButton.getX() == button.getX() &&
-                invisibleButton.getY() + invisibleButton.getHeight() == button.getY() |
-                        invisibleButton.getY() - invisibleButton.getHeight() == button.getY());
+        boolean onTheSameColumn = (invisibleButton.getY() == button.getY()),
+        onTheLeft = button.getX() == invisibleButton.getX() - invisibleButton.getWidth(),
+        onTheRight = button.getX() == invisibleButton.getX() + invisibleButton.getWidth();
+
+
+        boolean onTheSameRow = invisibleButton.getX() == button.getX(),
+            isOver = invisibleButton.getY() + invisibleButton.getHeight() == button.getY(),
+            isUnder = invisibleButton.getY() - invisibleButton.getHeight() == button.getY();
+
+        boolean isToTheRightOrLeft = onTheSameColumn && onTheLeft | onTheRight;
+        boolean isOverOrUnder = onTheSameRow && isOver | isUnder;
 
         return (isToTheRightOrLeft || isOverOrUnder);
     }
@@ -107,15 +114,16 @@ public class Puzzle extends JFrame {
 
     public void isGameOver() {
         boolean isGameFinished = finishedGame.stream()
-                .allMatch((buttonNumber) -> buttonNumber.equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()));
+            .allMatch((buttonNumber) -> buttonNumber
+                .equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()));
         if (isGameFinished) {
             JOptionPane.showMessageDialog(null, "Du har vunnit!");
         }
     }
 
     ActionListener startNewGame = e -> {
-        Iterator<JButton> iterator = buttons.iterator();
 
+        Iterator<JButton> iterator = buttons.iterator();
         while (iterator.hasNext()) {
             JButton button = iterator.next();
             iterator.remove();
