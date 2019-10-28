@@ -86,9 +86,8 @@ public class Puzzle extends JFrame {
     public boolean isButtonMovable(JButton button) {
 
         boolean onTheSameColumn = (invisibleButton.getY() == button.getY()),
-        onTheLeft = button.getX() == invisibleButton.getX() - invisibleButton.getWidth(),
-        onTheRight = button.getX() == invisibleButton.getX() + invisibleButton.getWidth();
-
+            onTheLeft = button.getX() == invisibleButton.getX() - invisibleButton.getWidth(),
+            onTheRight = button.getX() == invisibleButton.getX() + invisibleButton.getWidth();
 
         boolean onTheSameRow = invisibleButton.getX() == button.getX(),
             isOver = invisibleButton.getY() + invisibleButton.getHeight() == button.getY(),
