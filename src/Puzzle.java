@@ -21,7 +21,7 @@ public class Puzzle extends JFrame {
     Puzzle() {
         getUserInput();
         initJFrame();
-    }
+    }//CONSTRUCTOR
 
     public void initJFrame() {
         initButtons();
@@ -39,26 +39,26 @@ public class Puzzle extends JFrame {
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         createFinishedGameList();
-    }
+    }//initJFrame
 
     public void getUserInput() {
         try {
             columns = Integer
-                .parseInt(JOptionPane.showInputDialog(null, "Hur många kolumner vill du ha?"));
+                .parseInt(JOptionPane.showInputDialog(null, "How many columns would you like to have?"));
             rows = Integer
-                .parseInt(JOptionPane.showInputDialog(null, "Hur många rader vill du ha?"));
+                .parseInt(JOptionPane.showInputDialog(null, "How many rows would you like to have?"));
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }//getUserInput
 
     public void initButtons() {
         for (int i = 0; i < columns * rows - 1; i++) {
             buttons.add(new JButton(String.valueOf(i + 1)));
-            buttons.get(i).addActionListener(l);
+            buttons.get(i).addActionListener(clickedButton);
         }
         shuffleButtons();
-    }
+    }//initButtons
 
     public void shuffleButtons() {
         Collections.shuffle(buttons);
@@ -66,9 +66,9 @@ public class Puzzle extends JFrame {
             panel.add(buttons.get(i));
         }
         buttons.add(invisibleButton);
-    }
+    }//shuffleButtons
 
-    ActionListener l = e -> {
+    ActionListener clickedButton = e -> {
         for (int i = 0; i < buttons.size(); i++) {
             if (e.getSource() == buttons.get(i)) {
                 JButton button = buttons.get(i);
@@ -80,7 +80,7 @@ public class Puzzle extends JFrame {
                 break;
             }
         }
-    };
+    };//clickedButton
 
     public boolean isButtonMovable(JButton button) {
 
@@ -96,7 +96,7 @@ public class Puzzle extends JFrame {
         boolean isOverOrUnder = onTheSameRow && isOver | isUnder;
 
         return (isToTheRightOrLeft || isOverOrUnder);
-    }
+    }//isButtonMovable
 
     public void moveButtons(JButton button) {
         Point temp = new Point(button.getLocation());
@@ -108,16 +108,16 @@ public class Puzzle extends JFrame {
 
         buttons.set(indexOfButton, invisibleButton);
         buttons.set(indexOfInvisibleButton, button);
-    }
+    }//moveButtons
 
     public void isGameOver() {
         boolean isGameFinished = finishedGame.stream()
             .allMatch((buttonNumber) -> buttonNumber
                 .equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()));
         if (isGameFinished) {
-            JOptionPane.showMessageDialog(null, "Du har vunnit!");
+            JOptionPane.showMessageDialog(null, "You Won!");
         }
-    }
+    }//isGameOver
 
     ActionListener startNewGame = e -> {
 
@@ -131,13 +131,13 @@ public class Puzzle extends JFrame {
         initJFrame();
         invisibleButton.setVisible(true);
         invisibleButton.setVisible(false);
-    };
+    };//startNewGame
 
     public void createFinishedGameList() {
         for (int i = 1; i <= buttons.size(); i++) {
             finishedGame.add(String.valueOf(i));
         }
-    }
+    }//createFinishedGameList
 
     public static void main(String[] args) {
         new Puzzle();
