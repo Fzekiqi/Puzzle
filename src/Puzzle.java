@@ -14,7 +14,7 @@ public class Puzzle extends JFrame {
     private ArrayList<String> finishedGame = new ArrayList<>();
     private JPanel panel = new JPanel();
     private JButton invisibleButton = new JButton();
-    private JButton newGame = new JButton("New Game");
+    private JButton newGameButton = new JButton("New Game");
     private int columns;
     private int rows;
 
@@ -29,8 +29,8 @@ public class Puzzle extends JFrame {
         invisibleButton.setVisible(false);
         panel.setLayout(new GridLayout(rows, columns));
 
-        newGame.addActionListener(startNewGame);
-        add(newGame, BorderLayout.NORTH);
+        newGameButton.addActionListener(startNewGame);
+        add(newGameButton, BorderLayout.NORTH);
         add(panel);
         panel.add(invisibleButton);
         setTitle("15 Puzzle");
@@ -38,7 +38,7 @@ public class Puzzle extends JFrame {
         setSize(400, 400);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        createList();
+        createFinishedGameList();
     }
 
     public void getUserInput() {
@@ -49,7 +49,6 @@ public class Puzzle extends JFrame {
                 .parseInt(JOptionPane.showInputDialog(null, "Hur många rader vill du ha?"));
         } catch (Exception e) {
             e.printStackTrace();
-            //FIXME wfakwa
         }
     }
 
@@ -134,7 +133,7 @@ public class Puzzle extends JFrame {
         invisibleButton.setVisible(false);
     };
 
-    public void createList() {
+    public void createFinishedGameList() {
         for (int i = 1; i <= buttons.size(); i++) {
             finishedGame.add(String.valueOf(i));
         }
