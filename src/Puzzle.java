@@ -28,7 +28,6 @@ public class Puzzle extends JFrame {
         invisibleButton.setText(String.valueOf(buttons.size()));
         invisibleButton.setVisible(false);
         panel.setLayout(new GridLayout(rows, columns));
-
         newGameButton.addActionListener(startNewGame);
         add(newGameButton, BorderLayout.NORTH);
         add(panel);
@@ -42,6 +41,7 @@ public class Puzzle extends JFrame {
     }//initJFrame
 
     public void getUserInput() {
+
         rows = toInt("How many rows would you like to have?");
         columns = toInt("How many columns would you like to have");
     }//getUserInput
@@ -79,11 +79,15 @@ public class Puzzle extends JFrame {
 
     public void shuffleButtons() {
         Collections.shuffle(buttons);
+        addButtonsOnThePanel();
+        buttons.add(invisibleButton);
+    }//shuffleButtons
+
+    private void addButtonsOnThePanel() {
         for (int i = 0; i < buttons.size(); i++) {
             panel.add(buttons.get(i));
         }
-        buttons.add(invisibleButton);
-    }//shuffleButtons
+    }//addButtonsOnThePanel
 
     ActionListener clickedButton = e -> {
         for (int i = 0; i < buttons.size(); i++) {
@@ -128,6 +132,7 @@ public class Puzzle extends JFrame {
     }//moveButtons
 
     public void isGameOver() {
+
         boolean isGameFinished = finishedGame.stream()
                 .allMatch((buttonNumber) -> buttonNumber
                         .equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()));
@@ -138,19 +143,24 @@ public class Puzzle extends JFrame {
 
     ActionListener startNewGame = e -> {
 
+        emptyTheButtonsList();
+        initJFrame();
+        invisibleButton.setVisible(true);
+        invisibleButton.setVisible(false);
+    };//startNewGame
+
+    private void emptyTheButtonsList() {
+
         Iterator<JButton> iterator = buttons.iterator();
         while (iterator.hasNext()) {
             JButton button = iterator.next();
             iterator.remove();
             panel.remove(button);
         }
-
-        initJFrame();
-        invisibleButton.setVisible(true);
-        invisibleButton.setVisible(false);
-    };//startNewGame
+    }//emptyTheButtonList
 
     public void createFinishedGameList() {
+
         for (int i = 1; i <= buttons.size(); i++) {
             finishedGame.add(String.valueOf(i));
         }
