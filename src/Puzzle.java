@@ -42,15 +42,42 @@ public class Puzzle extends JFrame {
     }//initJFrame
 
     public void getUserInput() {
+        while (true) {
+
+                columns=toInt("How many columns would you like to have");
+                rows=toInt("How many rows would you like to have?");
+                break;
+
+        }
+
+    }//getUserInput
+
+    public int toInt(String message) {
+        int temp = 0;
         try {
-            columns = Integer
-                .parseInt(JOptionPane.showInputDialog(null, "How many columns would you like to have?"));
-            rows = Integer
-                .parseInt(JOptionPane.showInputDialog(null, "How many rows would you like to have?"));
-        } catch (Exception e) {
+            String input = JOptionPane.showInputDialog(null, message);
+            if(input==null ||input.isEmpty()){
+                System.exit(0);
+            }
+           temp=Integer.parseInt(input);
+            if(temp<3)
+                throw new NumberFormatException("You have to write more than 2 columns/rows");
+            return temp;
+        } catch (HeadlessException | NumberFormatException e) {
             e.printStackTrace();
         }
-    }//getUserInput
+
+//        try {
+//            String input = JOptionPane.showInputDialog(null, message);
+//            if (input == null || input.isEmpty()) {
+//                System.exit(0);
+//            }
+//            return Integer.parseInt(input);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        throw new RuntimeException("Unknown input");
+    }
 
     public void initButtons() {
         for (int i = 0; i < columns * rows - 1; i++) {
@@ -84,16 +111,16 @@ public class Puzzle extends JFrame {
 
     public boolean isButtonMovable(JButton button) {
 
-        boolean onTheSameColumn = (invisibleButton.getY() == button.getY()),
+        boolean onTheSameRow = (invisibleButton.getY() == button.getY()),
             onTheLeft = button.getX() == invisibleButton.getX() - invisibleButton.getWidth(),
             onTheRight = button.getX() == invisibleButton.getX() + invisibleButton.getWidth();
 
-        boolean onTheSameRow = invisibleButton.getX() == button.getX(),
+        boolean onTheSameColumn = invisibleButton.getX() == button.getX(),
             isOver = invisibleButton.getY() + invisibleButton.getHeight() == button.getY(),
             isUnder = invisibleButton.getY() - invisibleButton.getHeight() == button.getY();
 
-        boolean isToTheRightOrLeft = onTheSameColumn && onTheLeft | onTheRight;
-        boolean isOverOrUnder = onTheSameRow && isOver | isUnder;
+        boolean isToTheRightOrLeft = onTheSameRow && onTheLeft | onTheRight;
+        boolean isOverOrUnder = onTheSameColumn && isOver | isUnder;
 
         return (isToTheRightOrLeft || isOverOrUnder);
     }//isButtonMovable
