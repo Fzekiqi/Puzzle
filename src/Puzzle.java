@@ -42,30 +42,47 @@ public class Puzzle extends JFrame {
     }//initJFrame
 
     public void getUserInput() {
-        while (true) {
-
-                columns=toInt("How many columns would you like to have");
-                rows=toInt("How many rows would you like to have?");
-                break;
-
-        }
-
+        rows = toInt("How many rows would you like to have?");
+        columns = toInt("How many columns would you like to have");
     }//getUserInput
 
     public int toInt(String message) {
-        int temp = 0;
-        try {
-            String input = JOptionPane.showInputDialog(null, message);
-            if(input==null ||input.isEmpty()){
-                System.exit(0);
+
+        int integer = 0;
+        String input = "";
+        while (true) {
+            try {
+                input = JOptionPane.showInputDialog(null, message);
+                integer = Integer.parseInt(input);
+            } catch (Exception e) {
+                if (input == null) {
+                    System.exit(0);
+                }
+                JOptionPane.showMessageDialog(null, "You have to type a number.");
+                continue;
             }
-           temp=Integer.parseInt(input);
-            if(temp<3)
-                throw new NumberFormatException("You have to write more than 2 columns/rows");
-            return temp;
-        } catch (HeadlessException | NumberFormatException e) {
-            e.printStackTrace();
+            if (integer < 3) {
+                JOptionPane.showMessageDialog(null, "The number has to be above 2, you entered " + integer);
+                continue;
+            }
+            return integer;
         }
+
+    }
+
+//        int temp = 0;
+//        try {
+//            String input = JOptionPane.showInputDialog(null, message);
+//            if (input == null || input.isEmpty()) {
+//                System.exit(0);
+//            }
+//            temp = Integer.parseInt(input);
+//            if (temp < 3)
+//                throw new NumberFormatException("You have to write more than 2 columns/rows");
+//            return temp;
+//        } catch (HeadlessException | NumberFormatException e) {
+//            e.printStackTrace();
+//        }
 
 //        try {
 //            String input = JOptionPane.showInputDialog(null, message);
@@ -77,7 +94,6 @@ public class Puzzle extends JFrame {
 //            e.printStackTrace();
 //        }
 //        throw new RuntimeException("Unknown input");
-    }
 
     public void initButtons() {
         for (int i = 0; i < columns * rows - 1; i++) {
@@ -112,12 +128,12 @@ public class Puzzle extends JFrame {
     public boolean isButtonMovable(JButton button) {
 
         boolean onTheSameRow = (invisibleButton.getY() == button.getY()),
-            onTheLeft = button.getX() == invisibleButton.getX() - invisibleButton.getWidth(),
-            onTheRight = button.getX() == invisibleButton.getX() + invisibleButton.getWidth();
+                onTheLeft = button.getX() == invisibleButton.getX() - invisibleButton.getWidth(),
+                onTheRight = button.getX() == invisibleButton.getX() + invisibleButton.getWidth();
 
         boolean onTheSameColumn = invisibleButton.getX() == button.getX(),
-            isOver = invisibleButton.getY() + invisibleButton.getHeight() == button.getY(),
-            isUnder = invisibleButton.getY() - invisibleButton.getHeight() == button.getY();
+                isOver = invisibleButton.getY() + invisibleButton.getHeight() == button.getY(),
+                isUnder = invisibleButton.getY() - invisibleButton.getHeight() == button.getY();
 
         boolean isToTheRightOrLeft = onTheSameRow && onTheLeft | onTheRight;
         boolean isOverOrUnder = onTheSameColumn && isOver | isUnder;
@@ -139,8 +155,8 @@ public class Puzzle extends JFrame {
 
     public void isGameOver() {
         boolean isGameFinished = finishedGame.stream()
-            .allMatch((buttonNumber) -> buttonNumber
-                .equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()));
+                .allMatch((buttonNumber) -> buttonNumber
+                        .equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()));
         if (isGameFinished) {
             JOptionPane.showMessageDialog(null, "You Won!");
         }
