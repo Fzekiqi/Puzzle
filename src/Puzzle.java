@@ -53,11 +53,11 @@ public class Puzzle extends JFrame {
         while (true) {
             try {
                 input = JOptionPane.showInputDialog(null, message);
-                integer = Integer.parseInt(input);
-            } catch (Exception e) {
                 if (input == null) {
                     System.exit(0);
                 }
+                integer = Integer.parseInt(input);
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "You have to type a number.");
                 continue;
             }
@@ -69,31 +69,6 @@ public class Puzzle extends JFrame {
         }
 
     }
-
-//        int temp = 0;
-//        try {
-//            String input = JOptionPane.showInputDialog(null, message);
-//            if (input == null || input.isEmpty()) {
-//                System.exit(0);
-//            }
-//            temp = Integer.parseInt(input);
-//            if (temp < 3)
-//                throw new NumberFormatException("You have to write more than 2 columns/rows");
-//            return temp;
-//        } catch (HeadlessException | NumberFormatException e) {
-//            e.printStackTrace();
-//        }
-
-//        try {
-//            String input = JOptionPane.showInputDialog(null, message);
-//            if (input == null || input.isEmpty()) {
-//                System.exit(0);
-//            }
-//            return Integer.parseInt(input);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        throw new RuntimeException("Unknown input");
 
     public void initButtons() {
         for (int i = 0; i < columns * rows - 1; i++) {
