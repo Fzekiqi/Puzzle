@@ -90,17 +90,12 @@ public class Puzzle extends JFrame {
     }//addButtonsOnThePanel
 
     ActionListener clickedButton = e -> {
-        for (int i = 0; i < buttons.size(); i++) {
-            if (e.getSource() == buttons.get(i)) {
-                JButton button = buttons.get(i);
-
+            JButton button = (JButton) e.getSource();
                 if (isButtonMovable(button)) {
                     moveButtons(button);
                     isGameOver();
                 }
-                break;
-            }
-        }
+
     };//clickedButton
 
     public boolean isButtonMovable(JButton button) {
