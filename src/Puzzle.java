@@ -67,8 +67,7 @@ public class Puzzle extends JFrame {
             }
             return integer;
         }
-
-    }
+    }//toInt
 
     public void initButtons() {
         for (int i = 0; i < columns * rows - 1; i++) {
