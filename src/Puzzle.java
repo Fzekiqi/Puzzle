@@ -17,6 +17,7 @@ public class Puzzle extends JFrame {
     private JButton newGameButton = new JButton("New Game");
     private int columns;
     private int rows;
+    boolean solvable;
 
     Puzzle() {
         getUserInput();
@@ -62,7 +63,8 @@ public class Puzzle extends JFrame {
                 continue;
             }
             if (integer < 3) {
-                JOptionPane.showMessageDialog(null, "The number has to be above 2, you entered " + integer);
+                JOptionPane.showMessageDialog(null,
+                    "The number has to be above 2, you entered " + integer);
                 continue;
             }
             return integer;
@@ -70,17 +72,22 @@ public class Puzzle extends JFrame {
     }//toInt
 
     public void initButtons() {
+
         for (int i = 0; i < columns * rows - 1; i++) {
             buttons.add(new JButton(String.valueOf(i + 1)));
             buttons.get(i).addActionListener(clickedButton);
         }
+//        shuffleButtons();
         shuffleButtons();
     }//initButtons
 
     public void shuffleButtons() {
         Collections.shuffle(buttons);
         addButtonsOnThePanel();
+        solvable = isSolvable();
         buttons.add(invisibleButton);
+        System.out.println(isSolvable());
+
     }//shuffleButtons
 
     private void addButtonsOnThePanel() {
@@ -90,23 +97,23 @@ public class Puzzle extends JFrame {
     }//addButtonsOnThePanel
 
     ActionListener clickedButton = e -> {
-            JButton button = (JButton) e.getSource();
-                if (isButtonMovable(button)) {
-                    moveButtons(button);
-                    isGameOver();
-                }
+        JButton button = (JButton) e.getSource();
 
+        if (isButtonMovable(button)) {
+            moveButtons(button);
+            isGameOver();
+        }
     };//clickedButton
 
     public boolean isButtonMovable(JButton button) {
 
         boolean onTheSameRow = (invisibleButton.getY() == button.getY()),
-                onTheLeft = button.getX() == invisibleButton.getX() - invisibleButton.getWidth(),
-                onTheRight = button.getX() == invisibleButton.getX() + invisibleButton.getWidth();
+            onTheLeft = button.getX() == invisibleButton.getX() - invisibleButton.getWidth(),
+            onTheRight = button.getX() == invisibleButton.getX() + invisibleButton.getWidth();
 
         boolean onTheSameColumn = invisibleButton.getX() == button.getX(),
-                isOver = invisibleButton.getY() + invisibleButton.getHeight() == button.getY(),
-                isUnder = invisibleButton.getY() - invisibleButton.getHeight() == button.getY();
+            isOver = invisibleButton.getY() + invisibleButton.getHeight() == button.getY(),
+            isUnder = invisibleButton.getY() - invisibleButton.getHeight() == button.getY();
 
         boolean isToTheRightOrLeft = onTheSameRow && onTheLeft | onTheRight;
         boolean isOverOrUnder = onTheSameColumn && isOver | isUnder;
@@ -129,8 +136,8 @@ public class Puzzle extends JFrame {
     public void isGameOver() {
 
         boolean isGameFinished = finishedGame.stream()
-                .allMatch((buttonNumber) -> buttonNumber
-                        .equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()));
+            .allMatch((buttonNumber) -> buttonNumber
+                .equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()));
         if (isGameFinished) {
             JOptionPane.showMessageDialog(null, "You Won!");
         }
@@ -160,6 +167,25 @@ public class Puzzle extends JFrame {
             finishedGame.add(String.valueOf(i));
         }
     }//createFinishedGameList
+
+    public boolean isSolvable() {
+        int[] tal = new int[buttons.size()];
+        for (int i = 0; i < buttons.size()-1; i++) {
+            tal[i] = Integer.parseInt(buttons.get(i).getText());
+            System.out.print(tal[i]+" ");
+        }
+
+        System.out.println();
+        int count = 0;
+        for (int i = 0; i < tal.length; i++) {
+            for (int j = i; j > 0; j--) {
+                if (tal[i] < tal[j]) {
+                    count++;
+                }
+            }
+        }
+        return count % 2 == 0;
+    }
 
     public static void main(String[] args) {
         new Puzzle();
