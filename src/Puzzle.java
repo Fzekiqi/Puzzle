@@ -10,10 +10,10 @@ import java.util.Iterator;
 
 public class Puzzle extends JFrame {
 
-    private ArrayList<JButton> buttons = new ArrayList<>();
+    private ArrayList<Tile> tiles = new ArrayList<>();
     private ArrayList<String> finishedGame = new ArrayList<>();
     private JPanel panel = new JPanel();
-    private JButton invisibleButton = new JButton();
+    private Tile invisibleTile = new Tile();
     private JButton newGameButton = new JButton("New Game");
     private int columns;
     private int rows;
@@ -24,14 +24,14 @@ public class Puzzle extends JFrame {
     }//CONSTRUCTOR
 
     public void initJFrame() {
-        initButtons();
-        invisibleButton.setText(String.valueOf(buttons.size()));
-        invisibleButton.setVisible(false);
+        initTiles();
+        invisibleTile.setText(String.valueOf(tiles.size()));
+        invisibleTile.setVisible(false);
         panel.setLayout(new GridLayout(rows, columns));
-        newGameButton.addActionListener(startNewGame);
+        newGameButton.addActionListener(startNewGameListener);
         add(newGameButton, BorderLayout.NORTH);
         add(panel);
-        panel.add(invisibleButton);
+        panel.add(invisibleTile);
         setTitle("15 Puzzle");
         setLocationRelativeTo(null);
         setSize(400, 400);
@@ -70,95 +70,104 @@ public class Puzzle extends JFrame {
         }
     }//toInt
 
-    public void initButtons() {
+    public void initTiles() {
 
         for (int i = 0; i < columns * rows - 1; i++) {
-            buttons.add(new JButton(String.valueOf(i + 1)));
-            buttons.get(i).addActionListener(clickedButton);
+            tiles.add(new Tile(String.valueOf(i + 1)));
+            tiles.get(i).addActionListener(clickedTile);
         }
-        shuffleButtons();
-    }//initButtons
+        shuffleTiles();
+    }//initTiles
 
-    public void shuffleButtons() {
-        Collections.shuffle(buttons);
-        addButtonsOnThePanel();
-        buttons.add(invisibleButton);
-    }//shuffleButtons
+    public void shuffleTiles() {
+        Collections.shuffle(tiles);
+        addTilesOnThePanel();
+        tiles.add(invisibleTile);
+    }//shuffleTiles
 
-    private void addButtonsOnThePanel() {
-        for (int i = 0; i < buttons.size(); i++) {
-            panel.add(buttons.get(i));
+    private void addTilesOnThePanel() {
+        for (int i = 0; i < tiles.size(); i++) {
+            panel.add(tiles.get(i));
         }
-    }//addButtonsOnThePanel
+    }//addTilesOnThePanel
 
-    ActionListener clickedButton = e -> {
-        JButton button = (JButton) e.getSource();
+    ActionListener clickedTile = e -> {
+        Tile tile = (Tile) e.getSource();
 
-        if (isButtonMovable(button)) {
-            moveButtons(button);
+        if (isTileMovable(tile)) {
+            moveTile(tile);
             isGameOver();
         }
-    };//clickedButton
+    };//clickedTile
 
-    public boolean isButtonMovable(JButton button) {
+    public boolean isTileMovable(Tile tile) {
 
-        boolean onTheSameRow = (invisibleButton.getY() == button.getY()),
-                onTheLeft = button.getX() == invisibleButton.getX() - invisibleButton.getWidth(),
-                onTheRight = button.getX() == invisibleButton.getX() + invisibleButton.getWidth();
+        boolean onTheSameRow = (invisibleTile.getY() == tile.getY()),
+                onTheLeft = tile.getX() == invisibleTile.getX() - invisibleTile.getWidth(),
+                onTheRight = tile.getX() == invisibleTile.getX() + invisibleTile.getWidth();
 
-        boolean onTheSameColumn = invisibleButton.getX() == button.getX(),
-                isOver = invisibleButton.getY() + invisibleButton.getHeight() == button.getY(),
-                isUnder = invisibleButton.getY() - invisibleButton.getHeight() == button.getY();
+        boolean onTheSameColumn = invisibleTile.getX() == tile.getX(),
+                isOver = invisibleTile.getY() + invisibleTile.getHeight() == tile.getY(),
+                isUnder = invisibleTile.getY() - invisibleTile.getHeight() == tile.getY();
 
         boolean isToTheRightOrLeft = onTheSameRow && onTheLeft | onTheRight;
         boolean isOverOrUnder = onTheSameColumn && isOver | isUnder;
 
         return (isToTheRightOrLeft || isOverOrUnder);
-    }//isButtonMovable
+    }//isTileMovable
 
-    public void moveButtons(JButton button) {
-        Point tempButtonPoint = new Point(button.getLocation());
-        button.setLocation(invisibleButton.getLocation());
-        invisibleButton.setLocation(tempButtonPoint);
+    public void moveTile(Tile tile) {
+        Point tempTilePoint = new Point(tile.getLocation());
+        tile.setLocation(invisibleTile.getLocation());
+        invisibleTile.setLocation(tempTilePoint);
 
-        int indexOfButton = buttons.indexOf(button);
-        int indexOfInvisibleButton = buttons.indexOf(invisibleButton);
+        int indexOfTile = tiles.indexOf(tile);
+        int indexOfInvisibleTile = tiles.indexOf(invisibleTile);
 
-        buttons.set(indexOfButton, invisibleButton);
-        buttons.set(indexOfInvisibleButton, button);
-    }//moveButtons
+        tiles.set(indexOfTile, invisibleTile);
+        tiles.set(indexOfInvisibleTile, tile);
+    }//moveTile
 
     public void isGameOver() {
 
         boolean isGameFinished = finishedGame.stream()
-                .allMatch((buttonNumber) -> buttonNumber
-                        .equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()));
+                .allMatch((tileNumber) -> tileNumber
+                        .equals(tiles.get(Integer.parseInt(tileNumber) - 1).getText()));
         if (isGameFinished) {
-            JOptionPane.showMessageDialog(null, "You Won!");
+            int x = JOptionPane.showConfirmDialog(null, "You won!\nWould you like to play again?");
+            if(x != 0){
+                System.exit(0);
+            }
+            startNewGame();
         }
     }//isGameOver
 
-    ActionListener startNewGame = e -> {
+    ActionListener startNewGameListener = e -> {
+        startNewGame();
+    };//startNewGameListener
 
-        emptyTheButtonsList();
+    public void startNewGame(){
+        emptyTheTilesList();
         initJFrame();
-        invisibleButton.setVisible(true);
-        invisibleButton.setVisible(false);
-    };//startNewGame
+        invisibleTile.setVisible(true);
+        invisibleTile.setVisible(false);
+    }//startNewGame
 
-    private void emptyTheButtonsList() {
 
-        Iterator<JButton> iterator = buttons.iterator();
+
+    private void emptyTheTilesList() {
+
+        Iterator<Tile> iterator = tiles.iterator();
         while (iterator.hasNext()) {
-            JButton button = iterator.next();
+            Tile tile = iterator.next();
             iterator.remove();
-            panel.remove(button);
+            panel.remove(tile);
         }
-    }//emptyTheButtonList
+    }//emptyTheTileList
 
     public void createFinishedGameList() {
 
-        for (int i = 1; i <= buttons.size(); i++) {
+        for (int i = 1; i <= tiles.size(); i++) {
             finishedGame.add(String.valueOf(i));
         }
     }//createFinishedGameList
