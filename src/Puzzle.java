@@ -17,7 +17,6 @@ public class Puzzle extends JFrame {
     private JButton newGameButton = new JButton("New Game");
     private int columns;
     private int rows;
-    boolean solvable;
 
     Puzzle() {
         getUserInput();
@@ -49,7 +48,7 @@ public class Puzzle extends JFrame {
 
     public int toInt(String message) {
 
-        int integer = 0;
+        int inputToInt = 0;
         String input = "";
         while (true) {
             try {
@@ -57,17 +56,17 @@ public class Puzzle extends JFrame {
                 if (input == null) {
                     System.exit(0);
                 }
-                integer = Integer.parseInt(input);
+                inputToInt = Integer.parseInt(input);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "You have to type a number.");
                 continue;
             }
-            if (integer < 3) {
+            if (inputToInt < 3) {
                 JOptionPane.showMessageDialog(null,
-                    "The number has to be above 2, you entered " + integer);
+                        "The number has to be above 2, you entered " + inputToInt);
                 continue;
             }
-            return integer;
+            return inputToInt;
         }
     }//toInt
 
@@ -77,17 +76,13 @@ public class Puzzle extends JFrame {
             buttons.add(new JButton(String.valueOf(i + 1)));
             buttons.get(i).addActionListener(clickedButton);
         }
-//        shuffleButtons();
         shuffleButtons();
     }//initButtons
 
     public void shuffleButtons() {
         Collections.shuffle(buttons);
         addButtonsOnThePanel();
-        solvable = isSolvable();
         buttons.add(invisibleButton);
-        System.out.println(isSolvable());
-
     }//shuffleButtons
 
     private void addButtonsOnThePanel() {
@@ -108,12 +103,12 @@ public class Puzzle extends JFrame {
     public boolean isButtonMovable(JButton button) {
 
         boolean onTheSameRow = (invisibleButton.getY() == button.getY()),
-            onTheLeft = button.getX() == invisibleButton.getX() - invisibleButton.getWidth(),
-            onTheRight = button.getX() == invisibleButton.getX() + invisibleButton.getWidth();
+                onTheLeft = button.getX() == invisibleButton.getX() - invisibleButton.getWidth(),
+                onTheRight = button.getX() == invisibleButton.getX() + invisibleButton.getWidth();
 
         boolean onTheSameColumn = invisibleButton.getX() == button.getX(),
-            isOver = invisibleButton.getY() + invisibleButton.getHeight() == button.getY(),
-            isUnder = invisibleButton.getY() - invisibleButton.getHeight() == button.getY();
+                isOver = invisibleButton.getY() + invisibleButton.getHeight() == button.getY(),
+                isUnder = invisibleButton.getY() - invisibleButton.getHeight() == button.getY();
 
         boolean isToTheRightOrLeft = onTheSameRow && onTheLeft | onTheRight;
         boolean isOverOrUnder = onTheSameColumn && isOver | isUnder;
@@ -122,9 +117,9 @@ public class Puzzle extends JFrame {
     }//isButtonMovable
 
     public void moveButtons(JButton button) {
-        Point temp = new Point(button.getLocation());
+        Point tempButtonPoint = new Point(button.getLocation());
         button.setLocation(invisibleButton.getLocation());
-        invisibleButton.setLocation(temp);
+        invisibleButton.setLocation(tempButtonPoint);
 
         int indexOfButton = buttons.indexOf(button);
         int indexOfInvisibleButton = buttons.indexOf(invisibleButton);
@@ -136,8 +131,8 @@ public class Puzzle extends JFrame {
     public void isGameOver() {
 
         boolean isGameFinished = finishedGame.stream()
-            .allMatch((buttonNumber) -> buttonNumber
-                .equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()));
+                .allMatch((buttonNumber) -> buttonNumber
+                        .equals(buttons.get(Integer.parseInt(buttonNumber) - 1).getText()));
         if (isGameFinished) {
             JOptionPane.showMessageDialog(null, "You Won!");
         }
@@ -167,25 +162,6 @@ public class Puzzle extends JFrame {
             finishedGame.add(String.valueOf(i));
         }
     }//createFinishedGameList
-
-    public boolean isSolvable() {
-        int[] tal = new int[buttons.size()];
-        for (int i = 0; i < buttons.size()-1; i++) {
-            tal[i] = Integer.parseInt(buttons.get(i).getText());
-            System.out.print(tal[i]+" ");
-        }
-
-        System.out.println();
-        int count = 0;
-        for (int i = 0; i < tal.length; i++) {
-            for (int j = i; j > 0; j--) {
-                if (tal[i] < tal[j]) {
-                    count++;
-                }
-            }
-        }
-        return count % 2 == 0;
-    }
 
     public static void main(String[] args) {
         new Puzzle();
